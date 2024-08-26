@@ -2,8 +2,6 @@
 Create a tic-tac-toe game.
 
 What do you need:
-  Game Board to hold an array for the squares:
-    Created with Module/IIFE
   Player objects:
     Created using a Module.
   Object to add content to page:
@@ -32,3 +30,14 @@ const gameBoard = (function () {
   }
   return { getSquares, clearSquares, addMarker };
 })();
+
+const players = function (name, marker) {
+  const { addMarker } = gameBoard;
+  const getName = () => name;
+  const getMarker = () => marker;
+
+  return { addMarker, getName, getMarker };
+}
+
+const player1 = players('Sean', 'X');
+const player2 = players('John', 'O');
