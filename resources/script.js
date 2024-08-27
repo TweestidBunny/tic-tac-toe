@@ -71,7 +71,7 @@ const gameFlow = (function () {
   // Play Method
   const play = function (index1, index2) {
     const marker = currentPlayer.getMarker();
-    const board = getSquares();
+    const board = gameBoard.getSquares();
     const name = currentPlayer.getName();
     const checkNums = numsInRange(index1, index2);
 
