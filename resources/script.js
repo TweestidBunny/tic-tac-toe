@@ -37,16 +37,20 @@ const gameBoard = (function () {
 })();
 
 const players = function (name, marker) {
+  let wins = 0;
+
   const { addMarker } = gameBoard;
   const getName = () => name;
   const getMarker = () => marker;
+  const incWins = () => wins++;
+  const getWins = () => wins;
+  const clearWins = () => wins = 0;
 
-  return { addMarker, getName, getMarker };
+  return { addMarker, getName, getMarker, incWins, getWins, clearWins };
 }
 
 // Logic for game play.
 const gameFlow = (function () {
-  let wins = 0;
   let turns = 0;
 
   const player1 = players('Sean', 'X');
@@ -76,7 +80,7 @@ const gameFlow = (function () {
         currentPlayer.addMarker(index1, index2, marker);
         if (checkWin()) {
           console.log(`${name} Wins!`);
-          wins++;
+          currentPlayer.incWins();
         } else {
           turns++;
           playerTurn();
@@ -106,7 +110,10 @@ const gameFlow = (function () {
     }
   }
 
-  const clearWins = () => wins = 0;
+  const clearWins = () => {
+    player1.clearWins();
+    player2.clearWins();
+  };
 
   const newGame = function () {
     gameBoard.makeSquares();
