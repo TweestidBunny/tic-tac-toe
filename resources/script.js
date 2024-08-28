@@ -57,7 +57,7 @@ const Square = function () {
 }
 
 // Logic for game play.
-const gameFlow = (function () {
+const game = (function () {
   const board = gameBoard();
 
   const showBoard = () => board.printBoard();
