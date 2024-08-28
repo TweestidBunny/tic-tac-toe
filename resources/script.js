@@ -17,50 +17,60 @@ What do you need:
 */
 
 // Create game board.
-const gameBoard = (function () {
+const gameBoard = function () {
   const squares = [];
+  const row = 3;
+  const column = 3;
 
-  const makeSquares = function () {
-    for (let i = 0; i < 3; i++) {
-      squares.push([])
-      for (let j = 0; j < 3; j++) {
-        squares[i].push(null);
-      }
+  for (let i = 0; i < row; i++) {
+    squares[i] = [];
+    for (let j = 0; j < column; j++) {
+      squares[i].push(Square());
     }
   }
 
-  const getSquares = () => squares;
-  const addMarker = function (index1, index2, marker) {
-    squares[index1][index2] = marker;
+  const addMarker = function (row, col, player) {
+    if (squares[row][col].getMarker()) {
+      return;
+    }
+    squares[row][col].setMarker(player.marker);
   }
-  return { getSquares, makeSquares, addMarker };
-})();
 
-const players = function (name, marker) {
-  let wins = 0;
+  const printBoard = function () {
+    const boardWithSquares = squares.map((row) => row.map((square) => square.getMarker()));
+    console.log(boardWithSquares);
+  }
 
-  const { addMarker } = gameBoard;
-  const getName = () => name;
+  const getSquares = () => squares;
+
+  return { getSquares, printBoard, addMarker };
+};
+
+// Create individual squares
+const Square = function () {
+  let marker = null;
+
+  const setMarker = (mark) => { marker = mark };
   const getMarker = () => marker;
-  const incWins = () => wins++;
-  const getWins = () => wins;
-  const clearWins = () => wins = 0;
 
-  return { addMarker, getName, getMarker, incWins, getWins, clearWins };
+  return { setMarker, getMarker };
 }
 
 // Logic for game play.
 const gameFlow = (function () {
-  let turns = 0;
+  const board = gameBoard();
 
-  const player1 = players('Sean', 'X');
-  const player2 = players('John', 'O');
+  const showBoard = () => board.printBoard();
 
-  let currentPlayer = player1;
+  player1 = { name: 'Sean', marker: 'X' };
+  player2 = { name: 'John', marker: 'O' };
 
-  // Change current player based on turn
-  const playerTurn = function () {
-    currentPlayer = turns % 2 ? player2 : player1;
+  function getNullCount() {
+    return board.getSquares().flat().filter(item => item.getMarker() === null).length;
+  }
+
+  function checkNull() {
+    return board.getSquares().flat().map(item => item.getMarker()).includes(null);
   }
 
   // Check if index numbers are in proper range
@@ -68,57 +78,37 @@ const gameFlow = (function () {
     return num1 >= 0 && num1 <= 2 && num2 >= 0 && num2 <= 2;
   }
 
-  // Play Method
-  const play = function (index1, index2) {
-    const marker = currentPlayer.getMarker();
-    const board = gameBoard.getSquares();
-    const name = currentPlayer.getName();
-    const checkNums = numsInRange(index1, index2);
+  // Check for winner.
+  const checkWin = function (player, rowIdx, colIdx) {
 
-    if (checkNums) {
-      if (!board[index1][index2]) {
-        currentPlayer.addMarker(index1, index2, marker);
-        if (checkWin()) {
-          console.log(`${name} Wins!`);
-          currentPlayer.incWins();
-        } else {
-          turns++;
-          playerTurn();
-        }
-      }
+    const squares = board.getSquares();
+    const leftDiag = squares.filter((row, index) => row[(row.length - 1) - index].getMarker() === player.marker);
+    const rightDiag = squares.filter((row, index) => row[index].getMarker() === player.marker);
+    const column = squares.filter(row => row[colIdx].getMarker() === player.marker);
+    const row = board.getSquares()[rowIdx].filter(item => item.getMarker() === player.marker);
+
+    return leftDiag.length === 3 || rightDiag.length === 3 || column.length === 3 || row.length === 3;
+  }
+
+  // Play Method.
+  const play = (row, col) => {
+
+    let currentPlayer = getNullCount() % 2 ? player1 : player2;
+
+    if (numsInRange(row, col)) {
+      board.addMarker(row, col, currentPlayer);
+    }
+
+    showBoard();
+
+    if (checkWin(currentPlayer, row, col)) {
+      console.log(`${currentPlayer.name} wins!`);
+    }
+
+    if (!checkNull()) {
+      console.log('It\'s a tie!!');
     }
   }
 
-  const checkWin = function () {
-    const board = gameBoard.getSquares().flat();
-    const winScenario = [[1, 2, 3], [4, 5, 6], [7, 8, 9],
-    [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]];
-    for (let i = 0; i < winScenario.length; i++) {
-      let xCount = 0;
-      let oCount = 0;
-      for (let j = 0; j < winScenario[i].length; j++) {
-        let ind = winScenario[i][j];
-        if (board[ind - 1] === 'X') {
-          xCount++;
-        } else if (board[ind - 1] === 'O') {
-          oCount++;
-        }
-      }
-      if (xCount === 3 || oCount === 3) {
-        return true;
-      }
-    }
-  }
-
-  const clearWins = () => {
-    player1.clearWins();
-    player2.clearWins();
-  };
-
-  const newGame = function () {
-    gameBoard.makeSquares();
-    turns = 0;
-  }
-
-  return { play, clearWins, newGame };
+  return { play };
 })();
