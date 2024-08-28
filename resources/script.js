@@ -65,10 +65,12 @@ const game = (function () {
   player1 = { name: 'Sean', marker: 'X' };
   player2 = { name: 'John', marker: 'O' };
 
+  // Get length of nulls to determine player turn.
   function getNullCount() {
     return board.getSquares().flat().filter(item => item.getMarker() === null).length;
   }
 
+  // Check if any null squares remain.
   function checkNull() {
     return board.getSquares().flat().map(item => item.getMarker()).includes(null);
   }
