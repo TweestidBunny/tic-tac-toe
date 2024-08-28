@@ -60,8 +60,6 @@ const Square = function () {
 const game = (function () {
   const board = gameBoard();
 
-  const showBoard = () => board.printBoard();
-
   player1 = { name: 'Sean', marker: 'X' };
   player2 = { name: 'John', marker: 'O' };
 
@@ -101,7 +99,7 @@ const game = (function () {
       board.addMarker(row, col, currentPlayer);
     }
 
-    showBoard();
+    board.printBoard();
 
     if (checkWin(currentPlayer, row, col)) {
       console.log(`${currentPlayer.name} wins!`);
