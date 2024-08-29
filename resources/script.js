@@ -60,13 +60,13 @@ const Square = function () {
 const game = (function () {
   const board = gameBoard();
 
-  player1 = { name: 'Sean', marker: 'X' };
-  player2 = { name: 'John', marker: 'O' };
+  const player1 = { name: 'Sean', marker: 'X' };
+  const player2 = { name: 'John', marker: 'O' };
 
-  // Get length of nulls to determine player turn.
-  function getNullCount() {
-    return board.getSquares().flat().filter(item => item.getMarker() === null).length;
-  }
+  const players = [player1, player2];
+
+  let currentPlayer = players[0];
+  const switchPlayer = () => { currentPlayer = currentPlayer === players[0] ? players[1] : players[0] };
 
   // Check if any null squares remain.
   function checkNull() {
@@ -77,6 +77,7 @@ const game = (function () {
   const numsInRange = function (num1, num2) {
     return num1 >= 0 && num1 <= 2 && num2 >= 0 && num2 <= 2;
   }
+
 
   // Check for winner.
   const checkWin = function (player, rowIdx, colIdx) {
@@ -93,8 +94,6 @@ const game = (function () {
   // Play Method.
   const play = (row, col) => {
 
-    let currentPlayer = getNullCount() % 2 ? player1 : player2;
-
     if (numsInRange(row, col)) {
       board.addMarker(row, col, currentPlayer);
     }
@@ -108,6 +107,8 @@ const game = (function () {
     if (!checkNull()) {
       console.log('It\'s a tie!!');
     }
+
+    switchPlayer();
   }
 
   return { play };
