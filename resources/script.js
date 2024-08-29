@@ -132,9 +132,7 @@ const Game = function () {
 
 const screenSetup = function () {
   let game = Game();
-  let squares = game.getBoard().getSquares();
-
-  const showSquares = () => squares;
+  const showSquares = () => game.getBoard().getSquares();
 
   return { game, showSquares };
 }
