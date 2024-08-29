@@ -26,7 +26,7 @@ const gameBoard = function () {
     for (let i = 0; i < row; i++) {
       squares[i] = [];
       for (let j = 0; j < column; j++) {
-        squares[i].push(Square(i, j));
+        squares[i].push(Square());
       }
     }
   }
@@ -49,18 +49,13 @@ const gameBoard = function () {
 };
 
 // Create individual squares
-const Square = function (setRow, setCol) {
-  let row = setRow;
-  let column = setCol;
+const Square = function () {
   let marker = null;
 
   const setMarker = (mark) => { marker = mark };
   const getMarker = () => marker;
 
-  const getRow = () => row;
-  const getCol = () => column;
-
-  return { setMarker, getMarker, getRow, getCol };
+  return { setMarker, getMarker };
 }
 
 // Logic for game play.
