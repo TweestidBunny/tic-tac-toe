@@ -22,10 +22,12 @@ const gameBoard = function () {
   const row = 3;
   const column = 3;
 
-  for (let i = 0; i < row; i++) {
-    squares[i] = [];
-    for (let j = 0; j < column; j++) {
-      squares[i].push(Square());
+  const squaresSetup = () => {
+    for (let i = 0; i < row; i++) {
+      squares[i] = [];
+      for (let j = 0; j < column; j++) {
+        squares[i].push(Square(i, j));
+      }
     }
   }
 
@@ -43,22 +45,28 @@ const gameBoard = function () {
 
   const getSquares = () => squares;
 
-  return { getSquares, printBoard, addMarker };
+  return { getSquares, printBoard, addMarker, squaresSetup };
 };
 
 // Create individual squares
-const Square = function () {
+const Square = function (setRow, setCol) {
+  let row = setRow;
+  let column = setCol;
   let marker = null;
 
   const setMarker = (mark) => { marker = mark };
   const getMarker = () => marker;
 
-  return { setMarker, getMarker };
+  const getRow = () => row;
+  const getCol = () => column;
+
+  return { setMarker, getMarker, getRow, getCol };
 }
 
 // Logic for game play.
-const game = (function () {
+const Game = function () {
   const board = gameBoard();
+  const getBoard = () => board;
 
   const player1 = { name: 'Sean', marker: 'X' };
   const player2 = { name: 'John', marker: 'O' };
@@ -67,6 +75,9 @@ const game = (function () {
 
   let currentPlayer = players[0];
   const switchPlayer = () => { currentPlayer = currentPlayer === players[0] ? players[1] : players[0] };
+  const getCurrentPlayer = () => currentPlayer;
+  const getPlayers = () => players;
+  const resetPlayers = () => currentPlayer = players[0];
 
   // Check if any null squares remain.
   function checkNull() {
@@ -111,5 +122,22 @@ const game = (function () {
     switchPlayer();
   }
 
-  return { play };
-})();
+  const newGame = () => {
+    board.squaresSetup();
+    resetPlayers();
+  };
+
+  return { play, getCurrentPlayer, getPlayers, getBoard, newGame };
+};
+
+const screenSetup = function () {
+  let game = Game();
+  let board = game.getBoard();
+  let squares = board.getSquares();
+
+  const showSquares = () => squares;
+
+  return { game, showSquares };
+}
+
+const screen = screenSetup();
