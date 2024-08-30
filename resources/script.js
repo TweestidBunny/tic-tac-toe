@@ -97,6 +97,7 @@ const screenController = (function () {
   const game = Game();
   const gameCard = document.querySelector('.gameCard');
   const newGame = document.querySelector('.newGame');
+  const playAgain = document.querySelector('.playAgain');
 
   const player1 = game.getPlayers()[0];
   const player2 = game.getPlayers()[1];
@@ -105,6 +106,8 @@ const screenController = (function () {
   player1.showWins.textContent = player1.wins;
   player2.info.textContent = player2.name;
   player2.showWins.textContent = player2.wins;
+
+  playAgain.setAttribute('disabled', '');
 
   const updateScreen = function () {
     gameCard.textContent = '';
@@ -143,14 +146,16 @@ const screenController = (function () {
     }
   }
 
+  const updateWins = () => game.getPlayers().forEach(item => item.showWins.textContent = item.wins);
+
   const clickHandler = function (row, cell) {
     game.play(row, cell);
 
     if (game.checkWin(game.getCurrentPlayer(), row, cell)) {
       game.getCurrentPlayer().wins++;
-      game.getCurrentPlayer().showWins.textContent = game.getCurrentPlayer().wins;
+      updateWins();
+      playAgain.disabled = false;
 
-      console.log(game.getCurrentPlayer().wins)
       console.log(`${game.getCurrentPlayer().name} wins!`)
     } else if (!game.checkNull()) {
       console.log('It\'s a tie!');
@@ -158,9 +163,21 @@ const screenController = (function () {
 
     game.switchPlayer();
     updateScreen();
-
   }
 
-  newGame.addEventListener('click', () => { game.newGame(); updateScreen() })
+  newGame.addEventListener('click', () => {
+    player1.wins = 0;
+    player2.wins = 0;
+    game.newGame();
+    playAgain.disabled = true;
+    updateWins();
+    updateScreen();
+  })
+
+  playAgain.addEventListener('click', () => {
+    game.newGame();
+    updateScreen();
+    playAgain.disabled = true;
+  });
 
 })();
