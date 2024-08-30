@@ -86,6 +86,9 @@ main {
   font-size: 1.2rem;
   border-radius: 1rem;
   border: none;
+}
+
+.right>button:enabled {
   background-color: var(--rightButtonColor);
   color: #051923;
   font-weight: bold;
@@ -93,7 +96,13 @@ main {
   cursor: pointer;
 }
 
-.right>button:hover {
+.right>button:disabled {
+  background-color: var(--rightButtonColor);
+  color: #051923;
+  font-weight: bold;
+}
+
+.right>button:enabled:hover {
   box-shadow: 0 0 10px 1px #fee440;
   color: #fff;
 }
