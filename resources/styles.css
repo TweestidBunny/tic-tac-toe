@@ -3,6 +3,7 @@
   --rightButtonColor: #d90429;
   --mainColor: #051923;
   --bottomFontColor: #fff;
+  --cellBorders: 3px solid black;
 }
 
 * {
@@ -26,6 +27,46 @@ main {
   border-radius: 1rem;
   background-color: var(--gameWindowColor);
   box-shadow: inset 0 0 1rem .5rem var(--mainColor);
+  align-content: center;
+}
+
+.gameCard {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  align-content: center;
+  width: 500px;
+  height: 500px;
+  background-color: #ced4da;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: .8rem .7rem .8rem -1px #343a40, inset 0 0 1rem 2px #212529;
+}
+
+.row {
+  display: flex;
+  flex: 1;
+  border-bottom: var(--cellBorders);
+}
+
+.row:last-of-type {
+  border-bottom: none;
+}
+
+.cell {
+  border-style: none;
+  border-right: var(--cellBorders);
+  flex: 1;
+  background-color: transparent;
+}
+
+.cell:last-of-type {
+  border-right: none;
+}
+
+.cell:hover {
+  background-color: #14213d;
+  box-shadow: inset 0 0 1rem .8rem #ced4da;
 }
 
 .right {
