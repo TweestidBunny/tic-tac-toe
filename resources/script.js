@@ -109,9 +109,8 @@ const Game = function () {
 
 const screenController = (function () {
   const game = Game();
-
-  // const gameCells = document.querySelectorAll('.cell');
   const gameCard = document.querySelector('.gameCard');
+  const newGame = document.querySelector('.newGame');
 
   const player1 = document.querySelector('.player1');
   const player2 = document.querySelector('.player2');
@@ -171,7 +170,6 @@ const screenController = (function () {
 
   }
 
-  game.newGame();
-  updateScreen();
+  newGame.addEventListener('click', () => { game.newGame(); updateScreen() })
 
 })();
