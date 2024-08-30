@@ -39,8 +39,20 @@ const Square = function () {
 const Game = function () {
   const board = gameBoard();
 
-  const player1 = { name: 'John', marker: 'X' };
-  const player2 = { name: 'Sean', marker: 'O' };
+  const player1 = {
+    name: 'John',
+    marker: 'X',
+    wins: 0,
+    info: document.querySelector('.player1'),
+    showWins: document.querySelector('.player1Wins'),
+  };
+  const player2 = {
+    name: 'Sean',
+    marker: 'O',
+    wins: 0,
+    info: document.querySelector('.player2'),
+    showWins: document.querySelector('.player2Wins'),
+  };
 
   const players = [player1, player2];
 
@@ -86,11 +98,13 @@ const screenController = (function () {
   const gameCard = document.querySelector('.gameCard');
   const newGame = document.querySelector('.newGame');
 
-  const player1 = document.querySelector('.player1');
-  const player2 = document.querySelector('.player2');
+  const player1 = game.getPlayers()[0];
+  const player2 = game.getPlayers()[1];
 
-  player1.textContent = game.getPlayers()[0].name;
-  player2.textContent = game.getPlayers()[1].name;
+  player1.info.textContent = player1.name;
+  player1.showWins.textContent = player1.wins;
+  player2.info.textContent = player2.name;
+  player2.showWins.textContent = player2.wins;
 
   const updateScreen = function () {
     gameCard.textContent = '';
@@ -98,12 +112,12 @@ const screenController = (function () {
     letterToPlay.textContent = game.getCurrentPlayer().marker;
     const squares = game.board.getSquares();
 
-    if (game.getCurrentPlayer().name === player1.textContent) {
-      player1.classList.add('playerTurn');
-      player2.classList.remove('playerTurn');
+    if (game.getCurrentPlayer().name === player1.name) {
+      player1.info.classList.add('playerTurn');
+      player2.info.classList.remove('playerTurn');
     } else {
-      player1.classList.remove('playerTurn');
-      player2.classList.add('playerTurn');
+      player1.info.classList.remove('playerTurn');
+      player2.info.classList.add('playerTurn');
     }
 
     for (let i = 0; i < squares.length; i++) {
@@ -132,15 +146,18 @@ const screenController = (function () {
   const clickHandler = function (row, cell) {
     game.play(row, cell);
 
+    if (game.checkWin(game.getCurrentPlayer(), row, cell)) {
+      game.getCurrentPlayer().wins++;
+      game.getCurrentPlayer().showWins.textContent = game.getCurrentPlayer().wins;
+
+      console.log(game.getCurrentPlayer().wins)
+      console.log(`${game.getCurrentPlayer().name} wins!`)
+    } else if (!game.checkNull()) {
+      console.log('It\'s a tie!');
+    }
+
     game.switchPlayer();
     updateScreen();
-
-
-    // if (game.checkWin(game.getCurrentPlayer(), row, cell)) {
-    //   console.log(`${game.getCurrentPlayer().name} wins!`)
-    // } else if (!game.checkNull()) {
-    //   console.log('It\'s a tie!');
-    // }
 
   }
 
