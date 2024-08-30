@@ -38,6 +38,7 @@ const Square = function () {
 // Logic for game play.
 const Game = function () {
   const board = gameBoard();
+  const getSquares = () => board.getSquares();
 
   const player1 = {
     name: 'John',
@@ -90,7 +91,7 @@ const Game = function () {
     resetPlayers();
   };
 
-  return { play, getCurrentPlayer, getPlayers, newGame, board, checkWin, checkNull, switchPlayer };
+  return { play, getCurrentPlayer, getPlayers, newGame, getSquares, checkWin, checkNull, switchPlayer };
 };
 
 const screenController = (function () {
@@ -113,7 +114,7 @@ const screenController = (function () {
     gameCard.textContent = '';
     const letterToPlay = document.querySelector('.letterToPlay');
     letterToPlay.textContent = game.getCurrentPlayer().marker;
-    const squares = game.board.getSquares();
+    const squares = game.getSquares();
 
     if (game.getCurrentPlayer().name === player1.name) {
       player1.info.classList.add('playerTurn');
