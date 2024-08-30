@@ -58,6 +58,8 @@ main {
   border-right: var(--cellBorders);
   flex: 1;
   background-color: transparent;
+  font-size: 6rem;
+  font-weight: bold;
 }
 
 .cell:last-of-type {
