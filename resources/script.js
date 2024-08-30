@@ -38,14 +38,9 @@ const gameBoard = function () {
     squares[row][col].setMarker(player.marker);
   }
 
-  const printBoard = function () {
-    const boardWithSquares = squares.map((row) => row.map((square) => square.getMarker()));
-    console.log(boardWithSquares);
-  }
-
   const getSquares = () => squares;
 
-  return { getSquares, printBoard, addMarker, squaresSetup };
+  return { getSquares, addMarker, squaresSetup };
 };
 
 // Create individual squares
@@ -61,10 +56,9 @@ const Square = function () {
 // Logic for game play.
 const Game = function () {
   const board = gameBoard();
-  const getBoard = () => board;
 
-  const player1 = { name: 'Sean', marker: 'X' };
-  const player2 = { name: 'John', marker: 'O' };
+  const player1 = { name: 'John', marker: 'X' };
+  const player2 = { name: 'Sean', marker: 'O' };
 
   const players = [player1, player2];
 
@@ -77,11 +71,6 @@ const Game = function () {
   // Check if any null squares remain.
   function checkNull() {
     return board.getSquares().flat().map(item => item.getMarker()).includes(null);
-  }
-
-  // Check if index numbers are in proper range
-  const numsInRange = function (num1, num2) {
-    return num1 >= 0 && num1 <= 2 && num2 >= 0 && num2 <= 2;
   }
 
 
@@ -99,22 +88,15 @@ const Game = function () {
 
   // Play Method.
   const play = (row, col) => {
+    board.addMarker(row, col, currentPlayer);
 
-    if (numsInRange(row, col)) {
-      board.addMarker(row, col, currentPlayer);
-    }
+    // if (checkWin(currentPlayer, row, col)) {
+    //   console.log(`${currentPlayer.name} wins!`)
+    // }
 
-    board.printBoard();
-
-    if (checkWin(currentPlayer, row, col)) {
-      console.log(`${currentPlayer.name} wins!`);
-    }
-
-    if (!checkNull()) {
-      console.log('It\'s a tie!!');
-    }
-
-    switchPlayer();
+    // if (!checkNull) {
+    //   console.log('It\'s a tie!');
+    // }
   }
 
   const newGame = () => {
@@ -122,14 +104,74 @@ const Game = function () {
     resetPlayers();
   };
 
-  return { play, getCurrentPlayer, getPlayers, getBoard, newGame };
+  return { play, getCurrentPlayer, getPlayers, newGame, board, checkWin, checkNull, switchPlayer };
 };
 
-const screenSetup = function () {
-  let game = Game();
-  const showSquares = () => game.getBoard().getSquares();
+const screenController = (function () {
+  const game = Game();
 
-  return { game, showSquares };
-}
+  // const gameCells = document.querySelectorAll('.cell');
+  const gameCard = document.querySelector('.gameCard');
 
-const screen = screenSetup();
+  const player1 = document.querySelector('.player1');
+  const player2 = document.querySelector('.player2');
+
+  player1.textContent = game.getPlayers()[0].name;
+  player2.textContent = game.getPlayers()[1].name;
+
+  const updateScreen = function () {
+    gameCard.textContent = '';
+    const letterToPlay = document.querySelector('.letterToPlay');
+    letterToPlay.textContent = game.getCurrentPlayer().marker;
+    const squares = game.board.getSquares();
+
+    if (game.getCurrentPlayer().name === player1.textContent) {
+      player1.classList.add('playerTurn');
+      player2.classList.remove('playerTurn');
+    } else {
+      player1.classList.remove('playerTurn');
+      player2.classList.add('playerTurn');
+    }
+
+    for (let i = 0; i < squares.length; i++) {
+      const row = document.createElement('div');
+      row.classList.add('row');
+      for (let j = 0; j < squares[i].length; j++) {
+        const marker = squares[i][j].getMarker();
+        const cell = document.createElement('button');
+        cell.classList.add('cell');
+        cell.classList.add('emptyCell');
+        cell.setAttribute('data-row', i);
+        cell.setAttribute('data-cell', j);
+
+        cell.addEventListener('click', () => clickHandler(cell.dataset.row, cell.dataset.cell))
+
+        if (marker) {
+          cell.textContent = marker;
+          cell.classList.remove('emptyCell');
+        }
+        row.appendChild(cell);
+      }
+      gameCard.appendChild(row);
+    }
+  }
+
+  const clickHandler = function (row, cell) {
+    game.play(row, cell);
+
+    game.switchPlayer();
+    updateScreen();
+
+
+    // if (game.checkWin(game.getCurrentPlayer(), row, cell)) {
+    //   console.log(`${game.getCurrentPlayer().name} wins!`)
+    // } else if (!game.checkNull()) {
+    //   console.log('It\'s a tie!');
+    // }
+
+  }
+
+  game.newGame();
+  updateScreen();
+
+})();
