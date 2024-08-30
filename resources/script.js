@@ -1,21 +1,3 @@
-/* 
-Create a tic-tac-toe game.
-
-What do you need:
-  Object to add content to page:
-    screenObj?
-  Game flow object:
-    Check if all squares are full with no winner(a tie).
-
-    Get input from user:
-      When square is pressed, get square location:
-        querySelectorAll
-    
-  When square is clicked, get current player marker.
-  Add marker to 'square' array.
-  Update the screen with the content of the array after every 'play'.
-*/
-
 // Create game board.
 const gameBoard = function () {
   const squares = [];
@@ -89,14 +71,6 @@ const Game = function () {
   // Play Method.
   const play = (row, col) => {
     board.addMarker(row, col, currentPlayer);
-
-    // if (checkWin(currentPlayer, row, col)) {
-    //   console.log(`${currentPlayer.name} wins!`)
-    // }
-
-    // if (!checkNull) {
-    //   console.log('It\'s a tie!');
-    // }
   }
 
   const newGame = () => {
