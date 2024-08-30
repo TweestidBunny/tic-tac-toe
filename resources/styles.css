@@ -1,0 +1,104 @@
+:root {
+  --gameWindowColor: #006494;
+  --rightButtonColor: #d90429;
+  --mainColor: #051923;
+  --bottomFontColor: #fff;
+}
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr max-content;
+  grid-template-rows: 1fr max-content;
+  min-height: 100vh;
+  background-color: var(--mainColor);
+  padding: 2rem;
+}
+
+main {
+  /* border: 3px solid black; */
+  grid-area: 1 / 1 / 2 / 2;
+  border-radius: 1rem;
+  background-color: var(--gameWindowColor);
+  box-shadow: inset 0 0 1rem .5rem var(--mainColor);
+}
+
+.right {
+  grid-area: 1 / 2 / 3 / 3;
+  /* border: 1px solid greenyellow; */
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: var(--mainColor);
+}
+
+.right>button {
+  padding: 1rem 1.2rem;
+  font-size: 1.2rem;
+  border-radius: 1rem;
+  border: none;
+  background-color: var(--rightButtonColor);
+  color: #051923;
+  font-weight: bold;
+  box-shadow: 0 0 .5rem .2rem var(--rightButtonColor), inset 0 0 .5rem .2rem var(--mainColor);
+  cursor: pointer;
+}
+
+.right>button:hover {
+  box-shadow: 0 0 10px 1px #fee440;
+  color: #fff;
+}
+
+.bottom {
+  grid-area: 2 / 1 / 3 / 2;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  /* border: 1px solid red; */
+  background-color: var(--mainColor);
+  color: var(--bottomFontColor);
+}
+
+.screen {
+  /* border: 1px solid yellow; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.letterToPlay {
+  font-size: 5rem;
+  font-weight: bold;
+  padding: .5rem 2rem;
+  border-radius: 1rem;
+  box-shadow: inset 0 0 1rem 2px #d90429, 0 0 .5rem 2px #0077b6;
+}
+
+.winCount {
+  display: flex;
+  align-items: end;
+  gap: 2rem;
+  font-size: 2rem;
+  text-shadow: 1px 1px 2px blue, 0 0 1rem red, 0 0 .2rem red;
+}
+
+.winNums {
+  font-size: 3rem;
+}
+
+.players {
+  font-size: 5rem;
+  text-shadow: 1px 1px 2rem red, 0 0 2rem blue, 0 0 2rem blue;
+}
+
+.playerTurn {
+  text-decoration: underline;
+  text-underline-offset: .8rem;
+}
