@@ -204,27 +204,3 @@ const screenController = (function () {
   });
 
 })();
-
-// const playersArr = [];
-
-// const Players = function (name) {
-//   const marker = playersArr.length < 1 ? 'X' : 'O';
-//   let wins = 0;
-//   const info = document.querySelector(`.player${playersArr.length + 1}`);
-//   const showWins = document.querySelector(`.player${playersArr.length + 1}Wins`);
-
-//   const getName = () => name;
-//   const getMarker = () => marker;
-//   const getWins = () => wins;
-//   const resetWins = () => wins = 0;
-//   const getInfo = () => info;
-//   const getShowWins = () => showWins;
-
-//   return { getName, getMarker, getWins, resetWins, getInfo, getShowWins };
-// }
-
-// playersArr.push(Players(prompt('Player 1 Name: ')));
-// playersArr.push(Players(prompt('Player 2 Name: ')));
-
-// const player1 = playersArr[0];
-// const player2 = playersArr[1];
