@@ -17,7 +17,7 @@ const gameBoard = function () {
     if (squares[row][col].getMarker()) {
       return;
     }
-    squares[row][col].setMarker(player.marker);
+    squares[row][col].setMarker(player.getMarker());
   }
 
   const getSquares = () => squares;
@@ -40,22 +40,44 @@ const Game = function () {
   const board = gameBoard();
   const getSquares = () => board.getSquares();
 
-  const player1 = {
-    name: 'John',
-    marker: 'X',
-    wins: 0,
-    info: document.querySelector('.player1'),
-    showWins: document.querySelector('.player1Wins'),
-  };
-  const player2 = {
-    name: 'Sean',
-    marker: 'O',
-    wins: 0,
-    info: document.querySelector('.player2'),
-    showWins: document.querySelector('.player2Wins'),
-  };
+  const players = [];
 
-  const players = [player1, player2];
+  const Players = function (name) {
+    const marker = players.length < 1 ? 'X' : 'O';
+    let wins = 0;
+    const info = document.querySelector(`.player${players.length + 1}`);
+    const showWins = document.querySelector(`.player${players.length + 1}Wins`);
+
+    const getName = () => name;
+    const getMarker = () => marker;
+    const getWins = () => wins;
+    const incWins = () => wins++;
+    const resetWins = () => wins = 0;
+    const getInfo = () => info;
+    const getShowWins = () => showWins;
+
+    return { getName, getMarker, getWins, incWins, resetWins, getInfo, getShowWins };
+  }
+
+  players.push(Players(prompt('Player 1 name: ')));
+  players.push(Players(prompt('Player 2 name: ')));
+
+  // const player1 = {
+  //   name: 'John',
+  //   marker: 'X',
+  //   wins: 0,
+  //   info: document.querySelector('.player1'),
+  //   showWins: document.querySelector('.player1Wins'),
+  // };
+  // const player2 = {
+  //   name: 'Sean',
+  //   marker: 'O',
+  //   wins: 0,
+  //   info: document.querySelector('.player2'),
+  //   showWins: document.querySelector('.player2Wins'),
+  // };
+
+  // const players = [player1, player2];
 
   let currentPlayer = players[0];
   const switchPlayer = () => { currentPlayer = currentPlayer === players[0] ? players[1] : players[0] };
@@ -73,10 +95,10 @@ const Game = function () {
   const checkWin = function (player, rowIdx, colIdx) {
 
     const squares = board.getSquares();
-    const leftDiag = squares.filter((row, index) => row[(row.length - 1) - index].getMarker() === player.marker);
-    const rightDiag = squares.filter((row, index) => row[index].getMarker() === player.marker);
-    const column = squares.filter(row => row[colIdx].getMarker() === player.marker);
-    const row = board.getSquares()[rowIdx].filter(item => item.getMarker() === player.marker);
+    const leftDiag = squares.filter((row, index) => row[(row.length - 1) - index].getMarker() === player.getMarker());
+    const rightDiag = squares.filter((row, index) => row[index].getMarker() === player.getMarker());
+    const column = squares.filter(row => row[colIdx].getMarker() === player.getMarker());
+    const row = board.getSquares()[rowIdx].filter(item => item.getMarker() === player.getMarker());
 
     return leftDiag.length === 3 || rightDiag.length === 3 || column.length === 3 || row.length === 3;
   }
@@ -103,25 +125,25 @@ const screenController = (function () {
   const player1 = game.getPlayers()[0];
   const player2 = game.getPlayers()[1];
 
-  player1.info.textContent = player1.name;
-  player1.showWins.textContent = player1.wins;
-  player2.info.textContent = player2.name;
-  player2.showWins.textContent = player2.wins;
+  player1.getInfo().textContent = player1.getName();
+  player1.getShowWins().textContent = player1.getWins();
+  player2.getInfo().textContent = player2.getName();
+  player2.getShowWins().textContent = player2.getWins();
 
   playAgain.setAttribute('disabled', '');
 
   const updateScreen = function () {
     gameCard.textContent = '';
     const letterToPlay = document.querySelector('.letterToPlay');
-    letterToPlay.textContent = game.getCurrentPlayer().marker;
+    letterToPlay.textContent = game.getCurrentPlayer().getMarker();
     const squares = game.getSquares();
 
-    if (game.getCurrentPlayer().name === player1.name) {
-      player1.info.classList.add('playerTurn');
-      player2.info.classList.remove('playerTurn');
+    if (game.getCurrentPlayer().getName() === player1.getName()) {
+      player1.getInfo().classList.add('playerTurn');
+      player2.getInfo().classList.remove('playerTurn');
     } else {
-      player1.info.classList.remove('playerTurn');
-      player2.info.classList.add('playerTurn');
+      player1.getInfo().classList.remove('playerTurn');
+      player2.getInfo().classList.add('playerTurn');
     }
 
     for (let i = 0; i < squares.length; i++) {
@@ -147,17 +169,17 @@ const screenController = (function () {
     }
   }
 
-  const updateWins = () => game.getPlayers().forEach(item => item.showWins.textContent = item.wins);
+  const updateWins = () => game.getPlayers().forEach(item => item.getShowWins().textContent = item.getWins());
 
   const clickHandler = function (row, cell) {
     game.play(row, cell);
 
     if (game.checkWin(game.getCurrentPlayer(), row, cell)) {
-      game.getCurrentPlayer().wins++;
+      game.getCurrentPlayer().incWins();
       updateWins();
       playAgain.disabled = false;
 
-      console.log(`${game.getCurrentPlayer().name} wins!`)
+      console.log(`${game.getCurrentPlayer().getName()} wins!`)
     } else if (!game.checkNull()) {
       console.log('It\'s a tie!');
     }
@@ -167,8 +189,8 @@ const screenController = (function () {
   }
 
   newGame.addEventListener('click', () => {
-    player1.wins = 0;
-    player2.wins = 0;
+    player1.resetWins();
+    player2.resetWins();
     game.newGame();
     playAgain.disabled = true;
     updateWins();
@@ -182,3 +204,27 @@ const screenController = (function () {
   });
 
 })();
+
+// const playersArr = [];
+
+// const Players = function (name) {
+//   const marker = playersArr.length < 1 ? 'X' : 'O';
+//   let wins = 0;
+//   const info = document.querySelector(`.player${playersArr.length + 1}`);
+//   const showWins = document.querySelector(`.player${playersArr.length + 1}Wins`);
+
+//   const getName = () => name;
+//   const getMarker = () => marker;
+//   const getWins = () => wins;
+//   const resetWins = () => wins = 0;
+//   const getInfo = () => info;
+//   const getShowWins = () => showWins;
+
+//   return { getName, getMarker, getWins, resetWins, getInfo, getShowWins };
+// }
+
+// playersArr.push(Players(prompt('Player 1 Name: ')));
+// playersArr.push(Players(prompt('Player 2 Name: ')));
+
+// const player1 = playersArr[0];
+// const player2 = playersArr[1];
